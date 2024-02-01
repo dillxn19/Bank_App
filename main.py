@@ -1,5 +1,6 @@
 import sqlite3
 from tkinter import *
+from tkinter import simpledialog
 from bank_obj import *
 conn = sqlite3.connect('bank.db')
 c = conn.cursor()
@@ -24,7 +25,31 @@ def log_check():
         acc_info.config(text = user_obj.acc_num)
         bal_info.config(text = user_obj.bal)
         login_frame.grid_forget()
+        nam_entry.delete(0,END)
+        acc_entry.delete(0,END)
         info_frame.grid(row = 0, column = 0)
+
+def withdraw():
+    result = simpledialog.askstring("Input", "Enter your amount")
+    if result:
+        user_obj.withdraw(int(result))
+        bal_info.config(text = user_obj.bal)
+    else:
+        print("nothing")
+
+def deposit():
+    result = simpledialog.askstring("Input", "Enter your amount")
+    if result:
+        user_obj.deposit(int(result))
+        bal_info.config(text = user_obj.bal)
+    else:
+        print("nothing")
+
+def logout():
+    user_obj = Bank(name = "", acc_num = "", bal = "")
+    info_frame.grid_forget()
+    login_frame.grid()
+
     
 # frames
 home_frame = Frame(root)
@@ -57,10 +82,16 @@ acc_info_label = Label(info_frame, text = "Account Number: ")
 acc_info = Label(info_frame, text = user_obj.acc_num)
 bal_info_label = Label(info_frame, text = "Balance: ")
 bal_info = Label(info_frame, text = user_obj.bal)
+wit_button = Button(info_frame, text = "Withdraw", command = withdraw)
+dep_button = Button(info_frame, text = "Deposit", command = deposit)
+logout_button = Button(info_frame, text = "Logout", command = logout)
 nam_info_label.grid(row = 0, column = 0)
 nam_info.grid(row = 0, column = 1)
 acc_info_label.grid(row = 1, column = 0)
 acc_info.grid(row = 1, column = 1)
 bal_info_label.grid(row = 2, column = 0)
 bal_info.grid(row = 2, column = 1)
+wit_button.grid(row = 3, column = 0)
+dep_button.grid(row = 3, column = 1)
+logout_button.grid(row = 4, column = 0, columnspan = 2)
 root.mainloop()
