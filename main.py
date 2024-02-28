@@ -6,6 +6,8 @@ conn = sqlite3.connect('bank.db')
 c = conn.cursor()
 root = Tk()
 root.title("Bank App")
+root.grid_rowconfigure(0, weight=1)
+root.grid_columnconfigure(0, weight=1)
 user_obj = Bank(name = "", acc_num = "", bal = "")
 
 
@@ -57,15 +59,25 @@ def create():
     new_name = new_nam_entry.get()
     new_acc_num = new_acc_entry.get()
     new_bal = new_bal_entry.get()
-    c.execute(f"insert into bank_info values('{new_name}', '{new_acc_num}', '{new_bal}') ")
-    conn.commit()
-    messagebox.showinfo("Info", "Account Created Successfully!")
-    new_frame.grid_forget()
-    home_frame.grid()
+    try:
+        c.execute(f"insert into bank_info values('{new_name}', '{new_acc_num}', '{new_bal}') ")
+        conn.commit()
+        messagebox.showinfo("Info", "Account Created Successfully!")
+        new_frame.grid_forget()
+        home_frame.grid()
+        new_nam_entry.delete(0,END)
+        new_acc_entry.delete(0,END)
+        new_bal_entry.delete(0,END)
+    except:
+        messagebox.showinfo("Info", "Error: Account Number Used")
+        new_acc_entry.delete(0,END)
+    
     
 # frames
 home_frame = Frame(root, bg = "red")
-home_frame.grid(row = 0, column = 0)
+home_frame.grid(row = 0, column = 0, sticky = "nsew")
+home_frame.grid_rowconfigure(0, weight=1)
+home_frame.grid_columnconfigure(0, weight=1)
 login_frame = Frame(root)
 info_frame = Frame(root)
 new_frame = Frame(root)
