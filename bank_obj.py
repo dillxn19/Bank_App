@@ -14,11 +14,9 @@ class Bank:
         c.execute(f"update bank_info set Balance = '{self.bal}' where Name = '{self.name}'")
         conn.commit()
 
-        
-        
-
     def deposit(self,amt):
         self.bal += amt
         c.execute(f"update bank_info set Balance = '{self.bal}' where Name = '{self.name}'")
         conn.commit()
+
     

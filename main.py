@@ -1,6 +1,6 @@
 import sqlite3
 from tkinter import *
-from tkinter import simpledialog
+from tkinter import simpledialog, messagebox
 from bank_obj import *
 conn = sqlite3.connect('bank.db')
 c = conn.cursor()
@@ -13,6 +13,9 @@ def login():
     home_frame.grid_forget()
     login_frame.grid(row = 0, column = 0)
 
+def new_login():
+    home_frame.grid_forget()
+    new_frame.grid(row = 0, column = 0)
 
 def log_check():
     user_name = nam_entry.get()
@@ -50,18 +53,28 @@ def logout():
     info_frame.grid_forget()
     login_frame.grid()
 
+def create():
+    new_name = new_nam_entry.get()
+    new_acc_num = new_acc_entry.get()
+    new_bal = new_bal_entry.get()
+    c.execute(f"insert into bank_info values('{new_name}', '{new_acc_num}', '{new_bal}') ")
+    conn.commit()
+    messagebox.showinfo("Info", "Account Created Successfully!")
+    new_frame.grid_forget()
+    home_frame.grid()
     
 # frames
-home_frame = Frame(root)
+home_frame = Frame(root, bg = "red")
 home_frame.grid(row = 0, column = 0)
 login_frame = Frame(root)
 info_frame = Frame(root)
+new_frame = Frame(root)
 
 # home frame
-new_user_button = Button(home_frame, text = "New User")
+new_user_button = Button(home_frame, text = "New User", command = new_login)
 old_user_button = Button(home_frame, text = "Old User", command = login)
-new_user_button.grid(row = 0, column = 0)
-old_user_button.grid(row = 1, column = 0)
+new_user_button.grid(row = 0, column = 0, sticky = "nsew")
+old_user_button.grid(row = 1, column = 0, sticky = "nsew")
 
 #login frame
 nam_label = Label(login_frame, text = "Name: ")
@@ -94,4 +107,20 @@ bal_info.grid(row = 2, column = 1)
 wit_button.grid(row = 3, column = 0)
 dep_button.grid(row = 3, column = 1)
 logout_button.grid(row = 4, column = 0, columnspan = 2)
+
+#new frame
+new_nam_label = Label(new_frame, text = "Name: ")
+new_nam_entry = Entry(new_frame)
+new_acc_label = Label(new_frame, text = "New Account Number: ")
+new_acc_entry = Entry(new_frame)
+new_bal_label = Label(new_frame, text = "Balance: ")
+new_bal_entry = Entry(new_frame)
+create_button = Button(new_frame, text = "Create User", command = create)
+new_nam_label.grid(row = 0, column = 0)
+new_nam_entry.grid(row = 0, column = 1)
+new_acc_label.grid(row = 1, column = 0)
+new_acc_entry.grid(row = 1, column = 1)
+new_bal_label.grid(row = 2, column = 0)
+new_bal_entry.grid(row = 2, column = 1)
+create_button.grid(row = 3, column = 0, columnspan = 2)
 root.mainloop()
